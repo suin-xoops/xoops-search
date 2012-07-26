@@ -21,6 +21,7 @@ define('_MD_SEARCHRULE', '検索上の注意');
 define('_MD_IGNOREDWORDS', '次の語句は短すぎる（%u 文字以下）ため検索に使用されていません。');
 define('_MD_UNABLE_TO_SEARCH','検索できるページがありません。');
 define('_MD_KEY_WORD_SUG','上のキーワードに類似して下記のキーワードもお試し下さい。');
+define('_MD_KEY_SPACE','複数のキーワードで検索する場合は<strong>スペース</strong>で区切って下さい。');
 define('_MD_ZENKAKU_EISU','(全角文字)');
 define('_MD_HANKAKU_EISU','(半角文字)');
 //下記は必要がない限り変更しないこと。

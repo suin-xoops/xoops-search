@@ -7,6 +7,9 @@ define("_MI_SEARCH_NAME","XOOPS検索");
 // A brief description of this module
 define("_MI_SEARCH_DESC","XOOPSの検索機能を日本語向けに改変しモジュールに移植したものです。");
 
+// SubMenu
+define("_MI_SEARCH_SUB1","コメント一覧");
+
 // Blocks
 define("_MI_SEARCH_BLICK1","サイト内検索");
 define("_MI_SEARCH_BLICK_DESC1","サイト内検索用ブロック");
@@ -23,4 +26,6 @@ define("_MI_SEARCH_MENU2","グループ/ブロック管理");
 define("_MI_SEARCH_MENU_DESC2","このモジュールのアクセス権とブロックの管理");
 define("_MI_SEARCH_MENU3","テンプレート管理");
 define("_MI_SEARCH_MENU_DESC3","このモジュールのテンプレートを管理");
+define("_MI_SEARCH_MENU4","除外モジュール管理");
+define("_MI_SEARCH_MENU_DESC4","検索の対象から除外するモジュールの管理");
 ?>
