@@ -31,7 +31,7 @@ function b_search_mylinks($queryarray, $andor, $limit, $offset, $userid){
  	while($myrow = $xoopsDB->fetchArray($result)){
 		$ret[$i]['image'] = "images/home.gif";
 		$ret[$i]['link'] = "singlelink.php?cid=".$myrow['cid']."&amp;lid=".$myrow['lid']."";
-		$ret[$i]['title'] = $myts->htmlSpecialChars($myrow['title']);
+		$ret[$i]['title'] = $myrow['title'];
 		$ret[$i]['time'] = $myrow['date'];
 		$ret[$i]['uid'] = $myrow['submitter'];
 		//本文始め
