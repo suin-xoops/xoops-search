@@ -1,5 +1,5 @@
 <?php
-// $Id: mydownloads.php,v 1.0 2005/01/27 13:19:00 suin 
+// $Id: mydownloads.php,v 1.0 2005/02/02 06:05:00 suin 
 // FILE		::	mydownloads.php
 // AUTHOR	::	suin <sim@suin.jp>
 // WEB		::	AmethystBlue <http://www.suin.jp>
@@ -30,7 +30,7 @@ function b_search_mydownloads($queryarray, $andor, $limit, $offset, $userid){
  	while($myrow = $xoopsDB->fetchArray($result)){
 		$ret[$i]['image'] = "images/size2.gif";
 		$ret[$i]['link'] = "singlefile.php?cid=".$myrow['cid']."&amp;lid=".$myrow['lid']."";
-		$ret[$i]['title'] = $myrow['title'];
+		$ret[$i]['title'] = $myts->htmlSpecialChars($myrow['title']);
 		$ret[$i]['time'] = $myrow['date'];
 		$ret[$i]['uid'] = $myrow['submitter'];
 		$context = $myrow['description'];

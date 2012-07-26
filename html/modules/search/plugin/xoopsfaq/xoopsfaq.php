@@ -1,5 +1,5 @@
 <?php
-// $Id: xoopsfaq.php,v 1.0 2005/01/26 19:15:00 suin 
+// $Id: xoopsfaq.php,v 1.0 2005/02/02 06:05:00 suin 
 // FILE		::	xoopsfaq.php
 // AUTHOR	::	suin <sim@suin.jp>
 // WEB		::	AmethystBlue <http://www.suin.jp>
@@ -33,7 +33,7 @@ function b_search_xoopsfaq($queryarray, $andor, $limit, $offset, $userid)
  	while ( $myrow = $xoopsDB->fetchArray($result) ) {
 		$ret[$i]['image'] = "images/question2.gif";
 		$ret[$i]['link'] = "index.php?cat_id=".$myrow['category_id']."#".$myrow['contents_id'];
-		$ret[$i]['title'] = $myrow['contents_title'];
+		$ret[$i]['title'] = $myts->htmlSpecialChars($myrow['contents_title']);
 		$ret[$i]['time'] = $myrow['contents_time'];
 		//$ret[$i]['uid'] = $myrow['contents_uid'];
 		//本文始め

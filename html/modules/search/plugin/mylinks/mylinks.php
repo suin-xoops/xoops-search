@@ -1,5 +1,5 @@
 <?php
-// $Id: mylinks.php,v 1.0 2005/01/26 19:04:00 suin 
+// $Id: mylinks.php,v 1.1 2005/02/02 06:04:00 suin 
 // FILE		::	mylinks.php
 // AUTHOR	::	suin <sim@suin.jp>
 // WEB		::	AmethystBlue <http://www.suin.jp>
@@ -31,7 +31,7 @@ function b_search_mylinks($queryarray, $andor, $limit, $offset, $userid){
  	while($myrow = $xoopsDB->fetchArray($result)){
 		$ret[$i]['image'] = "images/home.gif";
 		$ret[$i]['link'] = "singlelink.php?cid=".$myrow['cid']."&amp;lid=".$myrow['lid']."";
-		$ret[$i]['title'] = $myrow['title'];
+		$ret[$i]['title'] = $myts->htmlSpecialChars($myrow['title']);
 		$ret[$i]['time'] = $myrow['date'];
 		$ret[$i]['uid'] = $myrow['submitter'];
 		//本文始め
