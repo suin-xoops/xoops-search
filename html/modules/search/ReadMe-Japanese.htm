@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+<meta name="GENERATOR" content="IBM WebSphere Studio Homepage Builder Version 7.0.0.0 for Windows">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title>利用説明書</title>
+<style type="text/css">
+<!--
+body{
+  font-size : 80%;
+}
+A{
+  text-decoration : none;
+}
+H2{
+  letter-spacing : 1px;
+  color : #ff6600;
+  text-align : center;
+}
+#main_div{
+  text-align : left;
+  width : 400px;
+  height : 100%;
+  line-height : 1.4;
+}
+TABLE{
+  width : 100%;
+border-width : 1px 1px 1px 1px;border-style : solid solid solid solid;border-top-color : silver;border-right-color : silver;border-bottom-color : silver;border-left-color : silver;}
+H4{
+  border-left-width : 3px;
+  border-left-style : solid;
+  border-left-color : #ff6600;
+  padding-left : 5px;
+  color : #ff6600;
+  border-bottom-width : 1px;
+  border-bottom-style : dotted;
+  border-bottom-color : #ff6600;
+}
+#quote{
+  padding-left : 5px;
+  margin-top : 5px;
+  margin-left : 10px;
+  margin-right : 10px;
+  margin-bottom : 5px;
+  border-left-width : 1px;
+  border-left-style : solid;
+  border-left-color : #ffbe7d;
+}
+TD{border-width : 1px 1px 1px 1px;border-style : solid solid solid solid;border-color : silver silver silver silver;}
+TH{border-width : 1px 1px 1px 1px;border-style : solid solid solid solid;border-color : silver silver silver silver;}
+IMG{
+  padding-left : 10px;
+  padding-right : 10px;
+}
+-->
+</style>
+</head>
+<body>
+<div align="center">
+<div id="main_div">
+<h2>XOOPS検索</h2>
+<H4>このモジュールについて</H4>
+<img src="images/search_logo.png" width="92" height="52" border="0" align="left">XOOPSの検索機能を日本語(マルチバイト)向けに改良しモジュール化したものです。検索ブロックも付属しています。<br clear="left">
+<h4>機能説明(<font size="-1">付属の検索機能とこのモジュールとの違い</font>)</h4>
+<ul>
+  <LI>最低文字数の表示を半角と全角で示すように変更。
+  <LI>用語の一般化「検索対象のモジュール」→「検索対象のページ」
+  <LI>用語の一般化「検索ルール」→「検索上の注意」
+  <LI>テンプレートで出力するので検索結果のレイアウトができる。
+  <LI>テンプレートで出力するので<a href="http://ryus.biz/modules/mydownloads/singlefile.php?cid=3&amp;lid=13" target="_blank">ryus_date</a>などのプラグインを自由に使える。
+  <LI>全角スペースでもAND検索できるように変更。
+  <LI>検索できるモジュールが無い場合、検索できるモジュールがないことを示すように変更。
+  <LI>extract()による展開を止めて変数汚染を予防。
+  <LI>コアの一部から切り離したことで改造することに抵抗がなくなった。</LI>
+</ul> 
+<h4>ライセンスと著作権</h4>
+このアプリケーションはGPLに準拠するとともに日本国の著作権法の適用対象となります。ご利用の際はGPLおよび著作権法に十分注意してください。また良くある質問への返答は下記のとおりです。<br>
+Q.再配布は出来るか？<br>
+A.可能。ただしGPLの定める範囲内であること。そしてその配布物の責任は再配布主が負うことを前提とする。<br>
+Q.著作表示は削除してもよいか？<br>
+A.氏名表示権の示すとおり無断で削除してはならない。ただし、妥当な理由がある場合は許可を出すことがある。いずれにしても制作者(<a href="mailto:sim@suin.jp">sim@suin.jp</a>)への相談なしでは削除・改変等は一切認めない。<br>
+Q.販売は出来るか？<br>
+A.可能。ただしGPLの定める範囲内であること。そしてその商品の責任は販売主が負うことを前提とする。
+<h4>免責と保証</h4>
+<ul>
+  <li>このアプリケーションがあなたに与える影響に関して制作者には一切の責任はないとする。
+  <li>このアプリケーションの利用者に対して制作者は一切の責任を放棄する。
+  <li>制作者はこのアプリケーションの利用者に予告無くこのアプリケーションを変更・配布する時期・開発の中止等を自由に決定する権利を持つと共に、それらが利用者に与えることに関して制作者は一切の責任を負わない。
+  <li>制作者はこのアプリケーションの不具合を解決することに努力するが、それは制作者の義務ではない。
+  <li>利用者はこのアプリケーションを利用した時点でこのアプリケーションの全責任を負うと共に上記の事項に同意したとする。
+</ul>
+<h4>インストール方法</h4>
+1) 圧縮ファイルを解凍してモジュールディレクトリにアップロード。<br>
+<br>
+2) モジュール管理にてインストールしてください。<br>
+<br>
+3) グループとブロックの設定を行って下さい。
+<h4>アンインストール方法</h4>
+通常のモジュール同様にモジュール管理よりアンインストールを実行してください。
+<h4>更新履歴</h4>
+<table border="1" cellpadding="0" cellspacing="0">
+  <col span="3">
+  <tbody>
+    <tr>
+      <th align="center">ver</th>
+      <th align="center">Date</th>
+      <th align="center">News</th>
+    </tr>
+    <tr>
+      <td nowrap>1.0</td>
+      <td nowrap>2005-01-19</td>
+      <td nowrap>ファーストリリース</td>
+    </tr>
+  </tbody>
+</table>
+<h4>謝辞</h4>
+myblocksadminはGIJOEさんのものをお借りしました。<br>
+<br>
+<a href="http://www.suin.jp/">Amethyst Blue</a> by SUIN</div>
+</div>
+</body>
+</html>
