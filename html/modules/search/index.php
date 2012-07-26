@@ -98,23 +98,23 @@ if ($action != 'showallbyuser') {
 		foreach ($temp_queries as $q) {
 			$q = trim($q);
 			if (strlen($q) >= $xoopsConfigSearch['keyword_min']) {
-				$queries[] = $myts->addSlashes($q);
+				$queries[] = addSlashes($q);
 				//for EUC-JP
 				if(function_exists('mb_convert_kana') && function_exists('mb_detect_encoding')){
 					if(preg_match(_MD_PREG_ZESU, $q) && mb_detect_encoding($q)=="EUC-JP"){ //Zenkaku Eisu
-						$mb_suggest[] = mb_convert_kana($myts->addSlashes($q), 'a')._MD_HANKAKU_EISU;
-						$mb_suggest_w[] = mb_convert_kana($myts->addSlashes($q), 'a');
+						$mb_suggest[] = mb_convert_kana(addSlashes($q), 'a')._MD_HANKAKU_EISU;
+						$mb_suggest_w[] = mb_convert_kana(addSlashes($q), 'a');
 					}elseif(preg_match(_MD_PREG_HESU, $q)){ //Hankaku Eisu
-						$mb_suggest[] = mb_convert_kana($myts->addSlashes($q), 'A')._MD_ZENKAKU_EISU;
-						$mb_suggest_w[] = mb_convert_kana($myts->addSlashes($q), 'A');
+						$mb_suggest[] = mb_convert_kana(addSlashes($q), 'A')._MD_ZENKAKU_EISU;
+						$mb_suggest_w[] = mb_convert_kana(addSlashes($q), 'A');
 					}elseif(preg_match(_MD_PREG_ZKANA, $q) && mb_detect_encoding($q)=="EUC-JP"){ //Zenkaku Katakana
-						$mb_suggest[] = mb_convert_kana($myts->addSlashes($q), 'k')._MD_HANKAKU_EISU;
-						$mb_suggest_w[] = mb_convert_kana($myts->addSlashes($q), 'k');
+						$mb_suggest[] = mb_convert_kana(addSlashes($q), 'k')._MD_HANKAKU_EISU;
+						$mb_suggest_w[] = mb_convert_kana(addSlashes($q), 'k');
 					}elseif(preg_match(_MD_PREG_HKANA, $q) && mb_detect_encoding($q)=="EUC-JP"){ //Hankaku Katakana
-						$mb_suggest[] = mb_convert_kana($myts->addSlashes($q), 'KV')._MD_ZENKAKU_EISU;
-						$mb_suggest_w[] = mb_convert_kana($myts->addSlashes($q), 'KV');
+						$mb_suggest[] = mb_convert_kana(addSlashes($q), 'KV')._MD_ZENKAKU_EISU;
+						$mb_suggest_w[] = mb_convert_kana(addSlashes($q), 'KV');
 					}else{
-					//	$mb_suggest_w[] = $myts->addSlashes($q);
+					//	$mb_suggest_w[] = addSlashes($q);
 					}
 				}
 			}
@@ -129,7 +129,7 @@ if ($action != 'showallbyuser') {
 			redirect_header('index.php', 2, sprintf(_MD_KEYTOOSHORT, $xoopsConfigSearch['keyword_min'], ceil($xoopsConfigSearch['keyword_min']/2) ));
  			exit();
 		}
-		$queries = array($myts->addSlashes($query));
+		$queries = array(addSlashes($query));
 	}
 }
 switch ($action) {
