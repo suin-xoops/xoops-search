@@ -345,7 +345,7 @@ case "showallbyuser":
 		}
 		$navi = '<table><tr>';
 		$search_url = XOOPS_URL.'/modules/'.$mydirname.'/index.php?query='.urlencode(stripslashes(implode(' ', $queries)));
-		$search_url .= "&amp;mid=$mid&amp;action=$action&amp;andor=$andor&amp;showcontext=$showcontext";
+		$search_url .= "&mid=$mid&action=$action&andor=$andor&showcontext=$showcontext";
 		if ($action=='showallbyuser') {
 			$search_url .= "&uid=$uid";
 		}
