@@ -32,4 +32,17 @@ function b_search_search_show()
 	$block['mydirname'] = $mydirname;
 	return $block;
 }
+
+function b_search_redirect(){
+	$mydirname = basename( dirname( dirname( __FILE__ ) ) ) ;
+	$request_url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+	if( preg_match("|".XOOPS_URL."/search.php|", $request_url ) ){
+		//$c = "true";
+		header("Location: ".XOOPS_URL."/modules/".$mydirname."/index.php?".$_SERVER['QUERY_STRING']);
+		exit();
+	}
+	//$block['content'] = $c;
+	//return $block;
+	return false;
+}
 ?>

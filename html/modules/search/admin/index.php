@@ -29,6 +29,10 @@ case 'default':
 	        echo "\n".'<td><span class="fg2">' .$adminmenu[$k]['desc']. '</span></td>';
 	        echo "\n".'</tr>';
 	}
+	echo "\n".'<tr class="bg1" align="left">';
+	echo "\n".'<td><span class="fg2"><a href="'.XOOPS_URL.'/modules/system/admin.php?fct=preferences&op=showmod&mod='.$module->getvar('mid').'">'._PREFERENCES.'</a></span></td>';
+	echo "\n".'<td><span class="fg2"></span></td>';
+	echo "\n".'</tr>';
         echo "\n".'</table>';
         echo "\n".'</td></tr>';
         echo "\n".'</table>';

@@ -12,7 +12,9 @@ define("_MI_SEARCH_SUB1","コメント一覧");
 
 // Blocks
 define("_MI_SEARCH_BLICK1","サイト内検索");
-define("_MI_SEARCH_BLICK_DESC1","サイト内検索用ブロック");
+define("_MI_SEARCH_BLICK_DESC1","検索フォームをブロックに表示します。");
+define("_MI_SEARCH_BLICK2","サイト内検索[転送用]");
+define("_MI_SEARCH_BLICK_DESC2", "このブロックをオンにしていると".XOOPS_URL."/search.phpへのリクエストが有った際に自動的にこのモジュールに転送できます。");
 
 // Templates
 define("_MI_SEARCH_TEMPLATE_DESC1","検索結果");
@@ -28,4 +30,8 @@ define("_MI_SEARCH_MENU3","テンプレート管理");
 define("_MI_SEARCH_MENU_DESC3","このモジュールのテンプレートを管理");
 define("_MI_SEARCH_MENU4","除外モジュール管理");
 define("_MI_SEARCH_MENU_DESC4","検索の対象から除外するモジュールの管理");
+
+// Title of config items
+define("_MI_SEARCH_CONFIG1","本文を表示する");
+define("_MI_SEARCH_CONFIG_DESC1","検索結果に本文の該当する部分を表示します。");
 ?>

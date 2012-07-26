@@ -72,6 +72,7 @@ if ($action == "showallbyuser" && (empty($mid) || empty($uid))) {
 $groups = ( $xoopsUser ) ? $xoopsUser -> getGroups() : XOOPS_GROUP_ANONYMOUS;
 $gperm_handler = & xoops_gethandler( 'groupperm' );
 $available_modules = $gperm_handler->getItemIds('module_read', $groups);
+include XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/include/function.php';
 
 if ($action == 'search') {
 	include XOOPS_ROOT_PATH.'/header.php';
@@ -109,10 +110,10 @@ if ($action != 'showallbyuser') {
 						$mb_suggest[] = mb_convert_kana($myts->addSlashes($q), 'k')._MD_HANKAKU_EISU;
 						$mb_suggest_w[] = mb_convert_kana($myts->addSlashes($q), 'k');
 					}elseif(preg_match(_MD_PREG_HKANA, $q) && mb_detect_encoding($q)=="EUC-JP"){ //Hankaku Katakana
-						$mb_suggest[] = mb_convert_kana($myts->addSlashes($q), 'K')._MD_ZENKAKU_EISU;
-						$mb_suggest_w[] = mb_convert_kana($myts->addSlashes($q), 'K');
+						$mb_suggest[] = mb_convert_kana($myts->addSlashes($q), 'KV')._MD_ZENKAKU_EISU;
+						$mb_suggest_w[] = mb_convert_kana($myts->addSlashes($q), 'KV');
 					}else{
-						$mb_suggest_w[] = $myts->addSlashes($q);
+					//	$mb_suggest_w[] = $myts->addSlashes($q);
 					}
 				}
 			}
@@ -151,6 +152,7 @@ case "results":
 		$mids = array_keys($modules);
 	}
 	include XOOPS_ROOT_PATH."/header.php";
+	$xoopsTpl->assign("xoops_module_header",'<link rel="stylesheet" type="text/css" media="screen" href="'.XOOPS_URL.'/modules/'.$mydirname.'/include/search.css" />');
 	$xoopsOption['template_main'] = 'search_result.html';
 	$xoopsTpl->assign('lang_search_results', _MD_SEARCHRESULTS);
 	$xoopsTpl->assign('lang_keyword', _MD_KEYWORDS);
@@ -194,15 +196,32 @@ case "results":
 		$mid = intval($mid);
 		if ( in_array($mid, $available_modules) ) {
  			$module =& $modules[$mid];
-			$results1 =& $module->search($queries, $andor, 5, 0);
+			$this_mod_dir = $module->getVar('dirname');
+			$use_context = false;
+			if( file_exists( XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/plugin/'.$this_mod_dir.'/'.$this_mod_dir.'.php' ) && $xoopsModuleConfig['search_display_text']==1 ){
+				include_once XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/plugin/'.$this_mod_dir.'/'.$this_mod_dir.'.php';
+				$func = 'b_search_'.$this_mod_dir;
+				$results1 =& context_search($func, $queries, $andor, 5, 0);
+				$use_context = true;
+			}else{
+				$results1 =& $module->search($queries, $andor, 5, 0);
+			}
 			if(count($mb_suggest_w)>0){
-				$results2 =& $module->search($mb_suggest_w, $andor, 5, 0);
+				if($use_context){
+					$results2 =& context_search($func, $mb_suggest_w, $andor, 5, 0);
+				}else{
+					$results2 =& $module->search($mb_suggest_w, $andor, 5, 0);
+				}
 			}else{
 				$results2 = array();
 			}
 			$results  = array_merge($results1,$results2);
 			usort($results, 'sort_by_date');
 			$count = count($results);
+			if ( $count > 5 ) {
+				$results  = array_slice($results,0,5);
+				$count = 5;
+			}
  			if (!is_array($results) || $count == 0) {
 				$no_match = _SR_NOMATCH;
 				$showall_link = '';
@@ -210,13 +229,13 @@ case "results":
 				$no_match = "";
 				for ($i = 0; $i < $count; $i++) {
 					if (isset($results[$i]['image']) && $results[$i]['image'] != '') {
-						$results[$i]['image'] = '/modules/'.$module->getVar('dirname').'/'.$results[$i]['image'];
+						$results[$i]['image'] = '/modules/'.$this_mod_dir.'/'.$results[$i]['image'];
 					} else {
 						$results[$i]['image'] = '/modules/'.$mydirname.'/images/posticon.gif';
 					}
 					$results[$i]['link'] = '/modules/'.$module->getVar('dirname').'/'.$results[$i]['link'];
-					$results[$i]['time'] = $results[$i]['time'] ? formatTimestamp($results[$i]['time']) : '';
-					$results[$i]['uid'] = intval($results[$i]['uid']);
+					$results[$i]['time'] = !empty($results[$i]['time']) ? formatTimestamp($results[$i]['time']) : "";
+					$results[$i]['uid'] = !empty($results[$i]['uid']) ? intval($results[$i]['uid']) : "" ;
 					if ( !empty($results[$i]['uid']) ) {
 						$results[$i]['uname'] = XoopsUser::getUnameFromId($results[$i]['uid']);
 					}
@@ -229,12 +248,7 @@ case "results":
 					$showall_link = '';
 				}
 			}
-			if($module->getVar('dirname')==$mydirname){
-				$module_name = _MD_COMMENTS;
-			}else{
-				$module_name = $myts->htmlSpecialChars($module->getVar('name'));
-			}
-  			$xoopsTpl->append('modules', array('name' => $module_name, 'results' => $results, 'showall_link' => $showall_link, 'no_match' => $no_match ));
+  			$xoopsTpl->append('modules', array('name' => $module->getVar('name'), 'results' => $results, 'showall_link' => $showall_link, 'no_match' => $no_match ));
 		}
 		unset($results1);
 		unset($results2);
@@ -251,6 +265,7 @@ case "results":
 case "showall":
 case "showallbyuser":
 	include XOOPS_ROOT_PATH."/header.php";
+	$xoopsTpl->assign("xoops_module_header",'<link rel="stylesheet" type="text/css" media="screen" href="'.XOOPS_URL.'/modules/'.$mydirname.'/include/search.css" />');
 	$db =& Database::getInstance();
 	$result = $db->query("SELECT mid FROM ".$db->prefix("search")." WHERE notshow!=0");
 	$undisplayable = array();
@@ -264,9 +279,22 @@ case "showallbyuser":
 	$xoopsOption['template_main'] = 'search_result_all.html';
 	$module_handler =& xoops_gethandler('module');
 	$module =& $module_handler->get($mid);
-	$results1 =& $module->search($queries, $andor, 20, $start, $uid);
+	$this_mod_dir = $module->getVar('dirname');
+	$use_context = false;
+	if( file_exists( XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/plugin/'.$this_mod_dir.'/'.$this_mod_dir.'.php' )  && $xoopsModuleConfig['search_display_text']==1 ){
+		include_once XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/plugin/'.$this_mod_dir.'/'.$this_mod_dir.'.php';
+		$func = 'b_search_'.$this_mod_dir;
+		$results1 =& context_search($func, $queries, $andor, 20, $start, $uid);
+		$use_context = true;
+	}else{
+		$results1 =& $module->search($queries, $andor, 20, $start, $uid);
+	}
 	if(count($mb_suggest_w)>0){
-		$results2 =& $module->search($mb_suggest_w, $andor, 20, $start, $uid);
+		if($use_context){
+			$results2 =& context_search($func, $mb_suggest_w, $andor, 20, $start, $uid);
+		}else{
+			$results2 =& $module->search($mb_suggest_w, $andor, 20, $start, $uid);
+		}
 	}else{
 		$results2 = array();
 	}
@@ -307,6 +335,7 @@ case "showallbyuser":
 			$results['link'] = '/modules/'.$module->getVar('dirname').'/'.$results[$i]['link'];
 			$results['time'] = $results[$i]['time'] ? formatTimestamp($results[$i]['time']) : '';
 			$results['uid'] = intval($results[$i]['uid']);
+			$results['context'] = !empty($results[$i]['context']) ? $results[$i]['context'] : "" ;
 			if ( !empty($results[$i]['uid']) ) {
 				$results['uname'] = XoopsUser::getUnameFromId($results[$i]['uid']);
 			}
@@ -343,10 +372,4 @@ case "showallbyuser":
 	break;
 }
 include XOOPS_ROOT_PATH."/footer.php";
-
-//Sub rootin
-function sort_by_date($p1, $p2) {
-    return ($p2['time'] - $p1['time']);
-}
-
 ?>
