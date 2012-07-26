@@ -20,6 +20,14 @@ define('_MD_KEYIGNORE', '文字数が半角<strong>%s</strong>字、全角<strong>%s</stro
 define('_MD_SEARCHRULE', '検索上の注意');
 define('_MD_IGNOREDWORDS', '次の語句は短すぎる（%u 文字以下）ため検索に使用されていません。');
 define('_MD_UNABLE_TO_SEARCH','検索できるページがありません。');
+define('_MD_KEY_WORD_SUG','上のキーワードに類似して下記のキーワードもお試し下さい。');
+define('_MD_ZENKAKU_EISU','(全角文字)');
+define('_MD_HANKAKU_EISU','(半角文字)');
+//下記は必要がない限り変更しないこと。
 define('_MD_NBSP','　'); //←全角スペース(キーワードを区切るためのもの)
+define('_MD_PREG_ZESU','/\xA3[\xC1-\xFA]/');
+define('_MD_PREG_HESU','/[A-Za-z0-9]/');
+define('_MD_PREG_ZKANA','/\xA5[\xA1-\xF6]/');
+define('_MD_PREG_HKANA','/\x8E[\xA6-\xDF]/');
 
 ?>

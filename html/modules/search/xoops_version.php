@@ -29,7 +29,7 @@ if( ! defined( 'XOOPS_ROOT_PATH' ) ) exit ;
 $mydirname = basename( dirname( __FILE__ ) ) ;
 
 $modversion['name'] = _MI_SEARCH_NAME;
-$modversion['version'] = 1.0;
+$modversion['version'] = 1.1;
 $modversion['description'] = _MI_SEARCH_DESC;
 $modversion['author'] = "suin(http://www.suin.jp/)";
 $modversion['credits'] = "suin";
@@ -58,11 +58,5 @@ $modversion['templates'][2]['file'] = "search_result_all.html";
 $modversion['templates'][2]['description'] = _MI_SEARCH_TEMPLATE_DESC2;
 $modversion['templates'][3]['file'] = "search_index.html";
 $modversion['templates'][3]['description'] = _MI_SEARCH_TEMPLATE_DESC3;
-
-//myblockadmin
-if( ! empty( $_POST['fct'] ) && ! empty( $_POST['op'] ) && $_POST['fct'] == 'modulesadmin' && $_POST['op'] == 'update_ok' && $_POST['dirname'] == $modversion['dirname'] ) {
-	include dirname( __FILE__ ) . "/include/onupdate.inc.php" ;
-}
-
 
 ?>

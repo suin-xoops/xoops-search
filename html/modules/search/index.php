@@ -39,16 +39,19 @@ if ($xoopsConfigSearch['enable_search'] != 1) {
 	header('Location: '.XOOPS_URL.'/index.php');
 	exit();
 }
-
 $action	= isset($_REQUEST['action']) 	? trim($_REQUEST['action']) 	: "search";
 $query	= isset($_REQUEST['query']) 	? trim($_REQUEST['query']) 	: "";
 $andor	= isset($_REQUEST['andor']) 	? trim($_REQUEST['andor']) 	: "AND";
 $mid 	= isset($_REQUEST['mid']) 	? intval($_REQUEST['mid']) 	: 0;
 $uid 	= isset($_REQUEST['uid']) 	? intval($_REQUEST['uid']) 	: 0;
 $start 	= isset($_REQUEST['start']) 	? intval($_REQUEST['start']) 	: 0;
+$sug 	= isset($_REQUEST['sug']) 	? intval($_REQUEST['sug']) 	: 0;
+$mids	= isset($_REQUEST['mids']) &&
+	  is_array($_REQUEST['mids']) 	? $_REQUEST['mids']	 	: "";
 $query	= str_replace(_MD_NBSP, " ", $query);
 $queries = array();
-
+$mb_suggest = array();
+$mb_suggest_w = array();
 if ( $action == "results" && $query == "" ) {
 	redirect_header("index.php",1,_MD_PLZENTER);
 	exit();
@@ -72,9 +75,9 @@ if ($action == 'search') {
 	include XOOPS_ROOT_PATH.'/header.php';
 	$xoopsOption['template_main'] = 'search_index.html';
 	include XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/include/searchform.php';
-	$search_form = $search_form->render();
-	// Do not remove follows
-	$search_form .= '<p><small><a href="http://www.suin.jp" target="_blank">search</a>(<a href="http://jp.xoops.org" target="_blank">original</a>)</small></p>';
+	$search_form  = $search_form->render();
+	//Do not remove follows
+	$search_form .= '<p><small><a href="http://www.suin.jp" target="_blank">search</a>(<a href="http://jp.xoops.org/" target="_blank">original</a>)</small></p>';
 	$xoopsTpl->assign('search_form', $search_form);
 	include XOOPS_ROOT_PATH.'/footer.php';
 	exit();
@@ -93,8 +96,26 @@ if ($action != 'showallbyuser') {
 			$q = trim($q);
 			if (strlen($q) >= $xoopsConfigSearch['keyword_min']) {
 				$queries[] = $myts->addSlashes($q);
-			} else {
-				$ignored_queries[] = $myts->addSlashes($q);
+				//for EUC-JP
+				if(function_exists('mb_convert_kana') && function_exists('mb_detect_encoding')){
+					if(preg_match(_MD_PREG_ZESU, $q) && mb_detect_encoding($q)=="EUC-JP"){ //Zenkaku Eisu
+						$mb_suggest[] = mb_convert_kana($myts->addSlashes($q), 'a')._MD_HANKAKU_EISU;
+						$mb_suggest_w[] = mb_convert_kana($myts->addSlashes($q), 'a');
+					}elseif(preg_match(_MD_PREG_HESU, $q)){ //Hankaku Eisu
+						$mb_suggest[] = mb_convert_kana($myts->addSlashes($q), 'A')._MD_ZENKAKU_EISU;
+						$mb_suggest_w[] = mb_convert_kana($myts->addSlashes($q), 'A');
+					}elseif(preg_match(_MD_PREG_ZKANA, $q) && mb_detect_encoding($q)=="EUC-JP"){ //Zenkaku Katakana
+						$mb_suggest[] = mb_convert_kana($myts->addSlashes($q), 'k')._MD_HANKAKU_EISU;
+						$mb_suggest_w[] = mb_convert_kana($myts->addSlashes($q), 'k');
+					}elseif(preg_match(_MD_PREG_HKANA, $q) && mb_detect_encoding($q)=="EUC-JP"){ //Hankaku Katakana
+						$mb_suggest[] = mb_convert_kana($myts->addSlashes($q), 'K')._MD_ZENKAKU_EISU;
+						$mb_suggest_w[] = mb_convert_kana($myts->addSlashes($q), 'K');
+					}else{
+						$mb_suggest_w[] = $myts->addSlashes($q);
+					}
+				}else{
+					$mb_suggest_w[] = $myts->addSlashes($q);
+				}
 			}
 		}
  		if (count($queries) == 0) {
@@ -144,14 +165,38 @@ case "results":
 		$keywords['key'] = '"'.htmlspecialchars(stripslashes($queries[0])).'"';
 		$xoopsTpl->append('keywords', $keywords);
 	}
+	if(count($mb_suggest)>0 && $sug!=1){
+		$xoopsTpl->assign('lang_sugwords', _MD_KEY_WORD_SUG );
+		$sug_url  = XOOPS_URL."/modules/".$mydirname."/index.php";
+		$sug_url .= "?andor=".$andor;
+		foreach ($mids as $m) {
+			$sug_url .= "&mids%5B%5D=".$m;
+		}
+		$sug_url .= "&action=".$action;
+		$sug_url .= "&sug=1";
+		$xoopsTpl->assign('sug_url', $sug_url );
+		foreach ($mb_suggest as $k=>$m) {
+			$sug_keys = array();
+			$sug_keys['key'] = htmlspecialchars(stripslashes($m));
+			$sug_keys['url'] = $sug_url."&query=".urlencode(stripslashes($mb_suggest_w[$k]));
+			$xoopsTpl->append('sug_keys', $sug_keys);
+		}
+	}
 	foreach ($mids as $mid) {
 		$mid = intval($mid);
 		if ( in_array($mid, $available_modules) ) {
  			$module =& $modules[$mid];
-			$results =& $module->search($queries, $andor, 5, 0);
+			$results1 =& $module->search($queries, $andor, 5, 0);
+			if(count($mb_suggest_w)>0){
+				$results2 =& $module->search($mb_suggest_w, $andor, 5, 0);
+			}else{
+				$results2 = array();
+			}
+			$results  = array_merge($results1,$results2);
+			usort($results, 'sort_by_date');
 			$count = count($results);
  			if (!is_array($results) || $count == 0) {
-				$no_match = _MD_NOMATCH;
+				$no_match = _SR_NOMATCH;
 				$showall_link = '';
 			} else {
 				$no_match = "";
@@ -178,21 +223,32 @@ case "results":
 			}
   			$xoopsTpl->append('modules', array('name' => $myts->makeTboxData4Show($module->getVar('name')), 'results' => $results, 'showall_link' => $showall_link, 'no_match' => $no_match ));
 		}
+		unset($results1);
+		unset($results2);
 		unset($results);
 		unset($module);
 	}
 	include "include/searchform.php";
-	$search_form = $search_form->render();
+	$search_form  = $search_form->render();
+	//Do not remove follows
+	$search_form .= '<p><small><a href="http://www.suin.jp" target="_blank">search</a>(<a href="http://jp.xoops.org/" target="_blank">original</a>)</small></p>';
 	$xoopsTpl->assign('search_form', $search_form);
 	break;
-
+	
 case "showall":
 case "showallbyuser":
 	include XOOPS_ROOT_PATH."/header.php";
 	$xoopsOption['template_main'] = 'search_result_all.html';
 	$module_handler =& xoops_gethandler('module');
 	$module =& $module_handler->get($mid);
-	$results =& $module->search($queries, $andor, 20, $start, $uid);
+	$results1 =& $module->search($queries, $andor, 20, $start, $uid);
+	if(count($mb_suggest_w)>0){
+		$results2 =& $module->search($mb_suggest_w, $andor, 20, $start, $uid);
+	}else{
+		$results2 = array();
+	}
+	$results  = array_merge($results1,$results2);
+	usort($results, 'sort_by_date');
 	$count = count($results);
 	if (is_array($results) && $count > 0) {
 		$next_results =& $module->search($queries, $andor, 1, $start + 20, $uid);
@@ -257,9 +313,17 @@ case "showallbyuser":
 		$xoopsTpl->assign('no_match', _MD_NOMATCH);
 	}
 	include "include/searchform.php";
-	$search_form = $search_form->render();
+	$search_form  = $search_form->render();
+	//Do not remove follows
+	$search_form .= '<p><small><a href="http://www.suin.jp" target="_blank">search</a>(<a href="http://jp.xoops.org/" target="_blank">original</a>)</small></p>';
 	$xoopsTpl->assign('search_form', $search_form);
 	break;
 }
 include XOOPS_ROOT_PATH."/footer.php";
+
+//Sub rootin
+function sort_by_date($p1, $p2) {
+    return ($p2['time'] - $p1['time']);
+}
+
 ?>

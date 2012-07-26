@@ -10,6 +10,15 @@
   <strong><{$bad.key}></strong> 
   <{/foreach}>
 <{/if}>
+<{*<{if $lang_sugwords!=""}>
+  <br />
+  <{$lang_sugwords}>:<br />
+  <{foreach item=sug from=$sug_keys}>
+  <a href="<{$sug.url}>">
+  <{$sug.key}>
+  </a> 
+  <{/foreach}>
+<{/if}>*}>
 <{foreach item=module from=$modules}>
 <p>
 <{if $module.no_match==""}>
