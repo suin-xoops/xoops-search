@@ -29,11 +29,11 @@ if( ! defined( 'XOOPS_ROOT_PATH' ) ) exit ;
 $mydirname = basename( dirname( __FILE__ ) ) ;
 
 $modversion['name'] = _MI_SEARCH_NAME;
-$modversion['version'] = 1.3;
+$modversion['version'] = 1.4;
 $modversion['description'] = _MI_SEARCH_DESC;
 $modversion['author'] = "suin(<a href=\"http://www.suin.jp/\" target=\"_blank\">http://www.suin.jp/</a>)";
 $modversion['credits'] = "suin";
-$modversion['help'] = "";
+$modversion['help'] = "ReadMe-Japanese.htm";
 $modversion['license'] = "GPL see LICENSE";
 $modversion['official'] = 0;
 $modversion['image'] = "images/search_logo.png";
