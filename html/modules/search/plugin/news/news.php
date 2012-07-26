@@ -26,7 +26,7 @@ function b_search_news($queryarray, $andor, $limit, $offset, $userid){
 	while($myrow = $xoopsDB->fetchArray($result)){
 		$ret[$i]['image'] = "images/forum.gif";
 		$ret[$i]['link'] = "article.php?storyid=".$myrow['storyid']."";
-		$ret[$i]['title'] = $myts->htmlSpecialChars($myrow['title']);
+		$ret[$i]['title'] = $myrow['title'];
 		$ret[$i]['time'] = $myrow['created'];
 		$ret[$i]['uid'] = $myrow['uid'];
 		$context = $myrow['hometext'].$myrow['bodytext'];

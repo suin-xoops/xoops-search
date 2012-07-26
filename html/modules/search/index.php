@@ -233,6 +233,7 @@ case "results":
 					} else {
 						$results[$i]['image'] = '/modules/'.$mydirname.'/images/posticon.gif';
 					}
+					$results[$i]['title'] = $myts->htmlSpecialChars($results[$i]['title']);
 					$results[$i]['link'] = '/modules/'.$module->getVar('dirname').'/'.$results[$i]['link'];
 					$results[$i]['time'] = !empty($results[$i]['time']) ? formatTimestamp($results[$i]['time']) : "";
 					$results[$i]['uid'] = !empty($results[$i]['uid']) ? intval($results[$i]['uid']) : "" ;

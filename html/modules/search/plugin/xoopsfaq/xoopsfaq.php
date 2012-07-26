@@ -33,7 +33,7 @@ function b_search_xoopsfaq($queryarray, $andor, $limit, $offset, $userid)
  	while ( $myrow = $xoopsDB->fetchArray($result) ) {
 		$ret[$i]['image'] = "images/question2.gif";
 		$ret[$i]['link'] = "index.php?cat_id=".$myrow['category_id']."#".$myrow['contents_id'];
-		$ret[$i]['title'] = $myts->htmlSpecialChars($myrow['contents_title']);
+		$ret[$i]['title'] = $myrow['contents_title'];
 		$ret[$i]['time'] = $myrow['contents_time'];
 		//$ret[$i]['uid'] = $myrow['contents_uid'];
 		//本文始め

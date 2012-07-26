@@ -30,7 +30,7 @@ function b_search_mydownloads($queryarray, $andor, $limit, $offset, $userid){
  	while($myrow = $xoopsDB->fetchArray($result)){
 		$ret[$i]['image'] = "images/size2.gif";
 		$ret[$i]['link'] = "singlefile.php?cid=".$myrow['cid']."&amp;lid=".$myrow['lid']."";
-		$ret[$i]['title'] = $myts->htmlSpecialChars($myrow['title']);
+		$ret[$i]['title'] = $myrow['title'];
 		$ret[$i]['time'] = $myrow['date'];
 		$ret[$i]['uid'] = $myrow['submitter'];
 		$context = $myrow['description'];
