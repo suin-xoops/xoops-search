@@ -6,7 +6,12 @@
 //
 function b_search_mydownloads($queryarray, $andor, $limit, $offset, $userid){
 	global $xoopsDB;
-	$sql = "SELECT d.lid,d.cid,d.title,d.submitter,d.date,t.description FROM ".$xoopsDB->prefix("mydownloads_downloads")." d LEFT JOIN ".$xoopsDB->prefix("mydownloads_text")." t ON t.lid=d.lid WHERE status>0";
+	$showcontext = isset( $_GET['showcontext'] ) ? $_GET['showcontext'] : 0 ;
+	if( $showcontext == 1){
+		$sql = "SELECT d.lid,d.cid,d.title,d.submitter,d.date,t.description FROM ".$xoopsDB->prefix("mydownloads_downloads")." d LEFT JOIN ".$xoopsDB->prefix("mydownloads_text")." t ON t.lid=d.lid WHERE status>0";
+	}else{
+		$sql = "SELECT d.lid,d.cid,d.title,d.submitter,d.date FROM ".$xoopsDB->prefix("mydownloads_downloads")." d LEFT JOIN ".$xoopsDB->prefix("mydownloads_text")." t ON t.lid=d.lid WHERE status>0";
+	}
 	if ( $userid != 0 ) {
 		$sql .= " AND d.submitter=".$userid." ";
 	}
@@ -33,9 +38,11 @@ function b_search_mydownloads($queryarray, $andor, $limit, $offset, $userid){
 		$ret[$i]['title'] = $myrow['title'];
 		$ret[$i]['time'] = $myrow['date'];
 		$ret[$i]['uid'] = $myrow['submitter'];
-		$context = $myrow['description'];
-		$context = strip_tags($myts->displayTarea(strip_tags($context)));
-		$ret[$i]['context'] = search_make_context($context,$queryarray);
+		if( !empty( $myrow['description'] ) ){
+			$context = $myrow['description'];
+			$context = strip_tags($myts->displayTarea(strip_tags($context)));
+			$ret[$i]['context'] = search_make_context($context,$queryarray);
+		}
 		$i++;
 	}
 	return $ret;

@@ -6,7 +6,12 @@
 //
 function b_search_mylinks($queryarray, $andor, $limit, $offset, $userid){
 	global $xoopsDB;
-	$sql = "SELECT l.lid,l.cid,l.title,l.submitter,l.date,t.description FROM ".$xoopsDB->prefix("mylinks_links")." l LEFT JOIN ".$xoopsDB->prefix("mylinks_text")." t ON t.lid=l.lid WHERE status>0";
+	$showcontext = isset( $_GET['showcontext'] ) ? $_GET['showcontext'] : 0 ;
+	if( $showcontext == 1){
+		$sql = "SELECT l.lid,l.cid,l.title,l.submitter,l.date,t.description FROM ".$xoopsDB->prefix("mylinks_links")." l LEFT JOIN ".$xoopsDB->prefix("mylinks_text")." t ON t.lid=l.lid WHERE status>0";
+	}else{
+		$sql = "SELECT l.lid,l.cid,l.title,l.submitter,l.date FROM ".$xoopsDB->prefix("mylinks_links")." l LEFT JOIN ".$xoopsDB->prefix("mylinks_text")." t ON t.lid=l.lid WHERE status>0";
+	}
 	if ( $userid != 0 ) {
 		$sql .= " AND l.submitter=".$userid." ";
 	}
@@ -34,11 +39,13 @@ function b_search_mylinks($queryarray, $andor, $limit, $offset, $userid){
 		$ret[$i]['title'] = $myrow['title'];
 		$ret[$i]['time'] = $myrow['date'];
 		$ret[$i]['uid'] = $myrow['submitter'];
-		//本文始め
-		$context = $myrow['description'];
-		$context = strip_tags($myts->displayTarea(strip_tags($context)));
-		$ret[$i]['context'] = search_make_context($context,$queryarray);
-		//本文終わり
+		if( !empty( $myrow['description'] ) ){
+	 		//本文始め
+			$context = $myrow['description'];
+			$context = strip_tags($myts->displayTarea(strip_tags($context)));
+			$ret[$i]['context'] = search_make_context($context,$queryarray);
+			//本文終わり
+		}
 		$i++;
 	}
 	return $ret;

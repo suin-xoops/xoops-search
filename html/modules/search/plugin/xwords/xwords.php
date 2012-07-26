@@ -23,7 +23,13 @@ function b_search_xwords( $queryarray, $andor, $limit, $offset, $userid )
 		{
 		return $ret;
 		} 
-	$sql = "SELECT entryID, term, proc, definition, uid, datesub FROM " . $xoopsDB -> prefix( "xwords_ent" ) . " WHERE submit = 0 AND offline = 0 "; 
+
+	$showcontext = isset( $_GET['showcontext'] ) ? $_GET['showcontext'] : 0 ;
+	if( $showcontext == 1){
+		$sql = "SELECT entryID, term, proc, definition, uid, datesub FROM " . $xoopsDB -> prefix( "xwords_ent" ) . " WHERE submit = 0 AND offline = 0 "; 
+	}else{
+		$sql = "SELECT entryID, term, proc, uid, datesub FROM " . $xoopsDB -> prefix( "xwords_ent" ) . " WHERE submit = 0 AND offline = 0 "; 
+	}
 
 	// because count() returns 1 even if a supplied variable
 	// is not an array, we must check if $querryarray is really an array
@@ -51,9 +57,11 @@ function b_search_xwords( $queryarray, $andor, $limit, $offset, $userid )
 		$ret[$i]['title'] = $myrow['term'];
 		$ret[$i]['time'] = $myrow['datesub'];
 		$ret[$i]['uid'] = $myrow['uid'];
-		$context = $myrow['definition'];
-		$context = strip_tags($myts->displayTarea(strip_tags($context)));
-		$ret[$i]['context'] = search_make_context($context,$queryarray);
+		if( !empty($myrow['definition']) ){
+			$context = $myrow['definition'];
+			$context = strip_tags($myts->displayTarea(strip_tags($context)));
+			$ret[$i]['context'] = search_make_context($context,$queryarray);
+		}
 		$i++;
 		}
 	return $ret;

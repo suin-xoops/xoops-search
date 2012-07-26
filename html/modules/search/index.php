@@ -47,6 +47,7 @@ $mid 	= isset($_REQUEST['mid']) 	? intval($_REQUEST['mid']) 	: 0;
 $uid 	= isset($_REQUEST['uid']) 	? intval($_REQUEST['uid']) 	: 0;
 $start 	= isset($_REQUEST['start']) 	? intval($_REQUEST['start']) 	: 0;
 $sug 	= isset($_REQUEST['sug']) 	? intval($_REQUEST['sug']) 	: 0;
+$showcontext= isset($_REQUEST['showcontext']) 	? intval($_REQUEST['showcontext']) 	: 1 ;
 $mids_p	= isset($_REQUEST['mids'])  	? $_REQUEST['mids']	 	: "";
 $mids = array();
 if( is_array($mids_p) ) { foreach($mids_p as $e){  $mids[] = intval($e); } }
@@ -80,7 +81,7 @@ if ($action == 'search') {
 	include XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/include/searchform.php';
 	$search_form  = $search_form->render();
 	//Do not remove follows
-	$search_form .= '<p><small><a href="http://www.suin.jp" target="_blank">search</a>(<a href="http://jp.xoops.org/" target="_blank">original</a>)</small></p>';
+	$search_form .= '<p><a href="http://www.suin.jp" target="_blank">search</a>(<a href="http://jp.xoops.org/" target="_blank">original</a>)</p>';
 	$xoopsTpl->assign('search_form', $search_form);
 	include XOOPS_ROOT_PATH.'/footer.php';
 	exit();
@@ -243,7 +244,7 @@ case "results":
 				}
 				if ( $count == 5 ) {
 					$search_url  = XOOPS_URL.'/modules/'.$mydirname.'/index.php?query='.urlencode(stripslashes(implode(' ', $queries)));
-					$search_url .= "&mid=$mid&action=showall&andor=$andor";
+					$search_url .= "&amp;mid=$mid&amp;action=showall&amp;andor=$andor&amp;showcontext=$showcontext";
 					$showall_link = '<a href="'.$search_url.'">'._MD_SHOWALLR.'</a>';
 				} else {
 					$showall_link = '';
@@ -259,7 +260,7 @@ case "results":
 	include "include/searchform.php";
 	$search_form  = $search_form->render();
 	//Do not remove follows
-	$search_form .= '<p><small><a href="http://www.suin.jp" target="_blank">search</a>(<a href="http://jp.xoops.org/" target="_blank">original</a>)</small></p>';
+	$search_form .= '<p><a href="http://www.suin.jp" target="_blank">search</a>(<a href="http://jp.xoops.org/" target="_blank">original</a>)</p>';
 	$xoopsTpl->assign('search_form', $search_form);
 	break;
 	
@@ -344,7 +345,7 @@ case "showallbyuser":
 		}
 		$navi = '<table><tr>';
 		$search_url = XOOPS_URL.'/modules/'.$mydirname.'/index.php?query='.urlencode(stripslashes(implode(' ', $queries)));
-		$search_url .= "&mid=$mid&action=$action&andor=$andor";
+		$search_url .= "&amp;mid=$mid&amp;action=$action&amp;andor=$andor&amp;showcontext=$showcontext";
 		if ($action=='showallbyuser') {
 			$search_url .= "&uid=$uid";
 		}
@@ -368,7 +369,7 @@ case "showallbyuser":
 	include "include/searchform.php";
 	$search_form  = $search_form->render();
 	//Do not remove follows
-	$search_form .= '<p><small><a href="http://www.suin.jp" target="_blank">search</a>(<a href="http://jp.xoops.org/" target="_blank">original</a>)</small></p>';
+	$search_form .= '<p><a href="http://www.suin.jp" target="_blank">search</a>(<a href="http://jp.xoops.org/" target="_blank">original</a>)</p>';
 	$xoopsTpl->assign('search_form', $search_form);
 	break;
 }
