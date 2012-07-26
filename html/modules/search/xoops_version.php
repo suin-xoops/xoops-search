@@ -29,9 +29,9 @@ if( ! defined( 'XOOPS_ROOT_PATH' ) ) exit ;
 $mydirname = basename( dirname( __FILE__ ) ) ;
 
 $modversion['name'] = _MI_SEARCH_NAME;
-$modversion['version'] = 1.1;
+$modversion['version'] = 1.2;
 $modversion['description'] = _MI_SEARCH_DESC;
-$modversion['author'] = "suin(http://www.suin.jp/)";
+$modversion['author'] = "suin(<a href=\"http://www.suin.jp/\" target=\"_blank\">http://www.suin.jp/</a>)";
 $modversion['credits'] = "suin";
 $modversion['help'] = "";
 $modversion['license'] = "GPL see LICENSE";
@@ -44,6 +44,9 @@ $modversion['adminindex'] = 'admin/index.php';
 $modversion['adminmenu'] = 'admin/menu.php';
 
 $modversion['hasMain'] = 1;
+
+$modversion['sqlfile']['mysql'] = "sql/mysql.sql";
+$modversion['tables'][0] = "search";
 
 $modversion['blocks'][1]['file'] = "search.php";
 $modversion['blocks'][1]['name'] = _MI_SEARCH_BLICK1;

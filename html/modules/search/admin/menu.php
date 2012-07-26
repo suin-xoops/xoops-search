@@ -4,6 +4,10 @@ $adminmenu[0]  = array(
 	'link'  => "admin/index.php",
 	'desc'  => _MI_SEARCH_MENU_DESC1 );
 $adminmenu[]  = array(
+	'title' => _MI_SEARCH_MENU4 ,
+	'link'  => "admin/index.php?op=edit",
+	'desc'  => _MI_SEARCH_MENU_DESC4 );
+$adminmenu[]  = array(
 	'title' => _MI_SEARCH_MENU2 ,
 	'link'  => "admin/myblocksadmin.php",
 	'desc'  => _MI_SEARCH_MENU_DESC2 );

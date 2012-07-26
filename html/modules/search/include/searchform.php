@@ -48,6 +48,11 @@ if (empty($modules)) {
 	if (!empty($available_modules)) {
 		$criteria->add(new Criteria('mid', "(".implode(',', $available_modules).")", 'IN'));
 	}
+	$db =& Database::getInstance();
+	$result = $db->query("SELECT mid FROM ".$db->prefix("search")." WHERE notshow!=0");
+    	while (list($badmid) = $db->fetchRow($result)) {
+		$criteria->add(new Criteria('mid', $badmid, '!='));
+	}
 	$module_handler =& xoops_gethandler('module');
 	$mod_arr = $module_handler->getList($criteria);
 	$mods_checkbox->addOptionArray($mod_arr);
@@ -62,9 +67,8 @@ else {
     $mods_checkbox->addOptionArray($module_array);
 }
 $search_form->addElement($mods_checkbox);
-if ($xoopsConfigSearch['keyword_min'] > 0) {
-	$search_form->addElement(new XoopsFormLabel(_MD_SEARCHRULE, sprintf(_MD_KEYIGNORE, $xoopsConfigSearch['keyword_min'], ceil($xoopsConfigSearch['keyword_min']/2))));
-}
+$lessthan = ($xoopsConfigSearch['keyword_min'] > 1) ? sprintf(_MD_KEYIGNORE, $xoopsConfigSearch['keyword_min'], ceil($xoopsConfigSearch['keyword_min']/2)).'<br />' : "" ;
+$search_form->addElement(new XoopsFormLabel(_MD_SEARCHRULE, $lessthan._MD_KEY_SPACE));
 $search_form->addElement(new XoopsFormHidden("action", "results"));
 $search_form->addElement(new XoopsFormButton("", "submit", _MD_SEARCH, "submit"));
 ?>

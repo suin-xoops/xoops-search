@@ -39,15 +39,17 @@ if ($xoopsConfigSearch['enable_search'] != 1) {
 	header('Location: '.XOOPS_URL.'/index.php');
 	exit();
 }
-$action	= isset($_REQUEST['action']) 	? trim($_REQUEST['action']) 	: "search";
-$query	= isset($_REQUEST['query']) 	? trim($_REQUEST['query']) 	: "";
-$andor	= isset($_REQUEST['andor']) 	? trim($_REQUEST['andor']) 	: "AND";
+$myts =& MyTextSanitizer::getInstance();
+$action	= isset($_REQUEST['action']) 	? $myts->stripSlashesGPC($_REQUEST['action']) 	: "search";
+$query	= isset($_REQUEST['query']) 	? $myts->stripSlashesGPC($_REQUEST['query']) 	: "";
+$andor	= isset($_REQUEST['andor']) 	? $myts->stripSlashesGPC($_REQUEST['andor']) 	: "AND";
 $mid 	= isset($_REQUEST['mid']) 	? intval($_REQUEST['mid']) 	: 0;
 $uid 	= isset($_REQUEST['uid']) 	? intval($_REQUEST['uid']) 	: 0;
 $start 	= isset($_REQUEST['start']) 	? intval($_REQUEST['start']) 	: 0;
 $sug 	= isset($_REQUEST['sug']) 	? intval($_REQUEST['sug']) 	: 0;
-$mids	= isset($_REQUEST['mids']) &&
-	  is_array($_REQUEST['mids']) 	? $_REQUEST['mids']	 	: "";
+$mids_p	= isset($_REQUEST['mids'])  	? $_REQUEST['mids']	 	: "";
+$mids = array();
+if( is_array($mids_p) ) { foreach($mids_p as $e){  $mids[] = intval($e); } }
 $query	= str_replace(_MD_NBSP, " ", $query);
 $queries = array();
 $mb_suggest = array();
@@ -87,7 +89,6 @@ if ( $andor != "OR" && $andor != "exact" && $andor != "AND" ) {
 	$andor = "AND";
 }
 
-$myts =& MyTextSanitizer::getInstance();
 if ($action != 'showallbyuser') {
 	if ( $andor != "exact" ) {
 		$ignored_queries = array(); // holds kewords that are shorter than allowed minmum length
@@ -113,8 +114,6 @@ if ($action != 'showallbyuser') {
 					}else{
 						$mb_suggest_w[] = $myts->addSlashes($q);
 					}
-				}else{
-					$mb_suggest_w[] = $myts->addSlashes($q);
 				}
 			}
 		}
@@ -137,7 +136,16 @@ case "results":
 	$criteria = new CriteriaCompo(new Criteria('hassearch', 1));
 	$criteria->add(new Criteria('isactive', 1));
 	$criteria->add(new Criteria('mid', "(".implode(',', $available_modules).")", 'IN'));
+	$db =& Database::getInstance();
+	$result = $db->query("SELECT mid FROM ".$db->prefix("search")." WHERE notshow!=0");
+    	while (list($badmid) = $db->fetchRow($result)) {
+		$criteria->add(new Criteria('mid', $badmid, '!='));
+	}
 	$modules =& $module_handler->getObjects($criteria, true);
+	if(count($modules)==0){
+		redirect_header("index.php",3,_MD_UNABLE_TO_SEARCH);
+		exit();
+	}
 	if (empty($mids) || !is_array($mids)) {
 		unset($mids);
 		$mids = array_keys($modules);
@@ -221,7 +229,12 @@ case "results":
 					$showall_link = '';
 				}
 			}
-  			$xoopsTpl->append('modules', array('name' => $myts->makeTboxData4Show($module->getVar('name')), 'results' => $results, 'showall_link' => $showall_link, 'no_match' => $no_match ));
+			if($module->getVar('dirname')==$mydirname){
+				$module_name = _MD_COMMENTS;
+			}else{
+				$module_name = $myts->htmlSpecialChars($module->getVar('name'));
+			}
+  			$xoopsTpl->append('modules', array('name' => $module_name, 'results' => $results, 'showall_link' => $showall_link, 'no_match' => $no_match ));
 		}
 		unset($results1);
 		unset($results2);
@@ -238,6 +251,16 @@ case "results":
 case "showall":
 case "showallbyuser":
 	include XOOPS_ROOT_PATH."/header.php";
+	$db =& Database::getInstance();
+	$result = $db->query("SELECT mid FROM ".$db->prefix("search")." WHERE notshow!=0");
+	$undisplayable = array();
+    	while (list($badmid) = $db->fetchRow($result)) {
+		$undisplayable[] = $badmid;
+	}
+	if( in_array($mid,$undisplayable) || !in_array($mid, $available_modules) ){
+		redirect_header("index.php",1,_NOPERM);
+		exit();
+	}
 	$xoopsOption['template_main'] = 'search_result_all.html';
 	$module_handler =& xoops_gethandler('module');
 	$module =& $module_handler->get($mid);
