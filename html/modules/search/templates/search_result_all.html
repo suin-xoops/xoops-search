@@ -8,7 +8,7 @@
 <h5><{$module_name}></h5>
 <p>
   <{foreach item=result from=$results}>
-  <img src="<{$xoops_url}><{$result.image}>" alt="<{$module.name}>" /><b><a href="<{$xoops_url}><{$result.link}>"><{$result.title}></a></b><br />
+  <img src="<{$xoops_url}><{$result.image}>" alt="<{$module_name}>" /><b><a href="<{$xoops_url}><{$result.link}>"><{$result.title}></a></b><br />
 <small><{if $result.uid!=0}><a href="<{$xoops_url}>/userinfo.php?uid=<{$result.uid}>"><{$result.uname}></a><{/if}><{if $result.time!=""}> (<{$result.time}>)<{/if}></small><br />
 <{if $result.context!=""}><div class="context"><{$result.context}></div><{/if}>
   <{/foreach}>
