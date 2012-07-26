@@ -24,7 +24,7 @@ function b_search_newbb($queryarray, $andor, $limit, $offset, $userid){
  	
  	while($myrow = $xoopsDB->fetchArray($result)){
 		$ret[$i]['link'] = "viewtopic.php?topic_id=".$myrow['topic_id']."&amp;forum=".$myrow['forum_id']."&amp;post_id=".$myrow['post_id']."#forumpost".$myrow['post_id'];
-		$ret[$i]['title'] = $myrow['subject'];
+		$ret[$i]['title'] = $myts->htmlSpecialChars($myrow['subject']);
 		$ret[$i]['time'] = $myrow['post_time'];
 		$ret[$i]['uid'] = $myrow['uid'];
 		$context =strip_tags($myts->displayTarea($myrow['post_text'],$myrow['nohtml'],$myrow['nosmiley'],1));

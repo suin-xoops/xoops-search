@@ -1,5 +1,5 @@
 <?php
-// $Id: comment_search.php,v 1.0 2005/01/26 17:39:00 suin 
+// $Id: comment_search.php,v 1.0 2005/02/02 06:05:00 suin 
 // FILE		::	comment_search.php
 // AUTHOR	::	suin <sim@suin.jp>
 // WEB		::	AmethystBlue <http://www.suin.jp>
@@ -31,7 +31,7 @@ function b_search_comment_search($queryarray, $andor, $limit, $offset, $userid){
 
  	while($myrow = $xoopsDB->fetchArray($result)){
 		$ret[$i]['link'] = "index.php?com_id=".$myrow['com_id'];
-		$ret[$i]['title'] = "[".$myrow['name']."] ".$myrow['com_title'];
+		$ret[$i]['title'] = $myts->htmlSpecialChars("[".$myrow['name']."] ".$myrow['com_title']);
 		$ret[$i]['time'] = $myrow['com_modified'];
 		$ret[$i]['uid'] = $myrow['com_uid'];
 		//本文始め
