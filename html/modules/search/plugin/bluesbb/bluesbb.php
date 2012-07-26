@@ -7,7 +7,12 @@ function b_search_bluesbb($queryarray, $andor, $limit, $offset, $userid){
 	$db =& Database::getInstance();
 	global $xoopsUser,$member_handler;
 	$myts =& MyTextSanitizer::getInstance();
-	$sql = "SELECT b.topic_id,b.sread_id,b.res_id,b.title,b.message,b.post_time,b.uid FROM ".$db->prefix("bluesbb")." b LEFT JOIN ".$db->prefix("bluesbb_topic")." t ON t.topic_id=b.topic_id WHERE";
+	$showcontext = isset( $_GET['showcontext'] ) ? $_GET['showcontext'] : 0 ;
+	if( $showcontext == 1){
+		$sql = "SELECT b.topic_id,b.sread_id,b.res_id,b.title,b.message,b.post_time,b.uid FROM ".$db->prefix("bluesbb")." b LEFT JOIN ".$db->prefix("bluesbb_topic")." t ON t.topic_id=b.topic_id WHERE";
+	}else{
+		$sql = "SELECT b.topic_id,b.sread_id,b.res_id,b.title,b.post_time,b.uid FROM ".$db->prefix("bluesbb")." b LEFT JOIN ".$db->prefix("bluesbb_topic")." t ON t.topic_id=b.topic_id WHERE";
+	}
 	if ( is_object($xoopsUser) ) {
 		$sql .= " (t.topic_access = 1 OR t.topic_access = 2 OR t.topic_access = 3 OR t.topic_access = 4 OR t.topic_access = 5";
 		$groups =& $member_handler->getGroupsByUser($xoopsUser->getVar('uid'),true);
@@ -42,8 +47,10 @@ function b_search_bluesbb($queryarray, $andor, $limit, $offset, $userid){
 		$ret[$i]['title'] = $myts->htmlSpecialChars($myrow['title']);
 		$ret[$i]['time'] = $myrow['post_time'];
 		$ret[$i]['uid'] = $myrow['uid'];
-		$context =strip_tags($myts->displayTarea($myrow['message'],0,1,1,1,1));
-		$ret[$i]['context'] = search_make_context($context,$queryarray);
+		if( !empty( $myrow['message'] ) ){
+			$context =strip_tags($myts->displayTarea($myrow['message'],0,1,1,1,1));
+			$ret[$i]['context'] = search_make_context($context,$queryarray);
+		}
 		$i++;
 	}
 	return $ret;

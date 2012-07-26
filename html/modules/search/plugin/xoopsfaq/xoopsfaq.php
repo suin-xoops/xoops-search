@@ -11,7 +11,12 @@ function b_search_xoopsfaq($queryarray, $andor, $limit, $offset, $userid)
 	if ( $userid != 0 ) {
 		return $ret;
 	}
-	$sql = "SELECT contents_id, category_id, contents_title, contents_contents, contents_time FROM ".$xoopsDB->prefix("xoopsfaq_contents")." WHERE contents_visible=1 ";
+	$showcontext = isset( $_GET['showcontext'] ) ? $_GET['showcontext'] : 0 ;
+	if( $showcontext == 1){
+		$sql = "SELECT contents_id, category_id, contents_title, contents_contents, contents_time FROM ".$xoopsDB->prefix("xoopsfaq_contents")." WHERE contents_visible=1 ";
+	}else{
+		$sql = "SELECT contents_id, category_id, contents_title, contents_time FROM ".$xoopsDB->prefix("xoopsfaq_contents")." WHERE contents_visible=1 ";
+	}
 	// because count() returns 1 even if a supplied variable
 	// is not an array, we must check if $querryarray is really an array
 	$count = count($queryarray);
@@ -36,11 +41,13 @@ function b_search_xoopsfaq($queryarray, $andor, $limit, $offset, $userid)
 		$ret[$i]['title'] = $myrow['contents_title'];
 		$ret[$i]['time'] = $myrow['contents_time'];
 		//$ret[$i]['uid'] = $myrow['contents_uid'];
-		//本文始め
-		$context = $myrow['contents_contents'];
-		$context = strip_tags($myts->displayTarea(strip_tags($context)));
-		$ret[$i]['context'] = search_make_context($context,$queryarray);
-		//本文終わり
+		if( !empty($myrow['contents_contents']) ){
+			//本文始め
+			$context = $myrow['contents_contents'];
+			$context = strip_tags($myts->displayTarea(strip_tags($context)));
+			$ret[$i]['context'] = search_make_context($context,$queryarray);
+			//本文終わり
+		}
 		$i++;
 	}
 	return $ret;

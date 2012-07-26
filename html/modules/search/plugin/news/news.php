@@ -2,7 +2,12 @@
 
 function b_search_news($queryarray, $andor, $limit, $offset, $userid){
 	global $xoopsDB;
-	$sql = "SELECT storyid,uid,title,created,hometext,bodytext,nohtml,nosmiley FROM ".$xoopsDB->prefix("stories")." WHERE published>0 AND published<=".time()."";
+	$showcontext = isset( $_GET['showcontext'] ) ? $_GET['showcontext'] : 0 ;
+	if( $showcontext == 1){
+		$sql = "SELECT storyid,uid,title,created,hometext,bodytext,nohtml,nosmiley FROM ".$xoopsDB->prefix("stories")." WHERE published>0 AND published<=".time()."";
+	}else{
+		$sql = "SELECT storyid,uid,title,created,nohtml,nosmiley FROM ".$xoopsDB->prefix("stories")." WHERE published>0 AND published<=".time()."";
+	}
 	if ( $userid != 0 ) {
 		$sql .= " AND uid=".$userid." ";
 	}
@@ -29,9 +34,11 @@ function b_search_news($queryarray, $andor, $limit, $offset, $userid){
 		$ret[$i]['title'] = $myrow['title'];
 		$ret[$i]['time'] = $myrow['created'];
 		$ret[$i]['uid'] = $myrow['uid'];
-		$context = $myrow['hometext'].$myrow['bodytext'];
-		$context = strip_tags($myts->displayTarea(strip_tags($context),$myrow['nohtml'],$myrow['nosmiley'],1));
-		$ret[$i]['context'] = search_make_context($context,$queryarray);
+		if( !empty( $myrow['hometext'] ) ){
+			$context = $myrow['hometext'].$myrow['bodytext'];
+			$context = strip_tags($myts->displayTarea(strip_tags($context),$myrow['nohtml'],$myrow['nosmiley'],1));
+			$ret[$i]['context'] = search_make_context($context,$queryarray);
+		}
 		$i++;
 	}
 	return $ret;

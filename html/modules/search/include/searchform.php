@@ -67,6 +67,9 @@ else {
     $mods_checkbox->addOptionArray($module_array);
 }
 $search_form->addElement($mods_checkbox);
+if( $xoopsModuleConfig['search_display_text'] == 1 ){
+	$search_form->addElement(new XoopsFormRadioYN(_MD_SHOW_CONTEXT, "showcontext", $showcontext));
+}
 $lessthan = ($xoopsConfigSearch['keyword_min'] > 1) ? sprintf(_MD_KEYIGNORE, $xoopsConfigSearch['keyword_min'], ceil($xoopsConfigSearch['keyword_min']/2)).'<br />' : "" ;
 $search_form->addElement(new XoopsFormLabel(_MD_SEARCHRULE, $lessthan._MD_KEY_SPACE));
 $search_form->addElement(new XoopsFormHidden("action", "results"));
